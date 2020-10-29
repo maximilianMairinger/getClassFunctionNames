@@ -17,11 +17,11 @@
     "url": "git+https://github.com/maximilianMairinger/getClassFunctionNames.git"
   },
   "keywords": [
-  "get",
-  "class",
-  "function",
-  "names"
-],
+    "get",
+    "class",
+    "function",
+    "names"
+  ],
   "author": "Maximilian Mairinger",
   "license": "ISC",
   "bugs": {
