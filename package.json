@@ -1,0 +1,42 @@
+{
+  "name": "get-class-function-names",
+  "version": "0.0.1",
+  "description": "Get all function names of a class up to a specified prototype.",
+  "main": "app/dist/getClassFunctionNames.js",
+  "types": "app/dist/getClassFunctionNames.d.ts",
+  "scripts": {
+    "build": "tsc -p ./tsconfig.prod.json",
+    "dev": "npm run devWeb",
+    "devWeb": "rollup --config rollup.web.dev.config.js -w",
+    "devNode": "rollup --config rollup.node.dev.config.js -w",
+    "deploy": "npm run build && npm publish",
+    "test": "node ./repl/dist/getClassFunctionNames-repl.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maximilianMairinger/getClassFunctionNames.git"
+  },
+  "keywords": [
+  "get",
+  "class",
+  "function",
+  "names"
+],
+  "author": "Maximilian Mairinger",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maximilianMairinger/getClassFunctionNames/issues"
+  },
+  "homepage": "https://github.com/maximilianMairinger/getClassFunctionNames#readme",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^13.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^8.1.0",
+    "@rollup/plugin-typescript": "^5.0.0",
+    "@types/node": "^13.13.4",
+    "rollup": "^2.18.1",
+    "tslib": "2.0.0",
+    "typescript": "^4.0.2",
+    "webpack-merge": "^5.0.9"
+  }
+}
