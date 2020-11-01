@@ -13,4 +13,4 @@ class AAA extends Array {
 //@ts-ignore
 AAA.prototype.ok = 2
 
-console.log(getClassFunctionNames(AAA, Array, {includeInstanceOf: ["number"]}))
+console.log(getClassFunctionNames(AAA, Object, {includeInstanceOf: [Function]}))
