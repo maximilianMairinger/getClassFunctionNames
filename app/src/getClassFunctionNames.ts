@@ -95,7 +95,6 @@ export function getClassFunctionNames(Class: any, UpToBaseClass: any = Object, f
     if (allowName(name) && isFree(name)) functionNameList.push(name)
   }
 
-  // debugger
   while (curProto instanceof UpToBaseClass) {
     Object.getOwnPropertyNames(curProto).forEach(add)
     cur = Object.getPrototypeOf(cur)
