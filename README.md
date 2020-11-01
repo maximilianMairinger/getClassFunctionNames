@@ -38,8 +38,8 @@ getClassFunctionNames(AA)          // ["qq", "ww", "length", "concat", "copyWith
 If you wanted to filter out only function names (thus omitting properties like length) you could:
 
 ```ts
-getClassFunctionNames(AA, Object, {includeInstanceOf: Function})   // ["qq", "ww", "concat", "copyWithin", "fill", ...]
-getClassFunctionNames(AA, Object, {excludeInstanceOf: "number"})   // ["qq", "ww", "concat", "copyWithin", "fill", ...]
+getClassFunctionNames(AA, {includeInstanceOf: Function})   // ["qq", "ww", "concat", "copyWithin", "fill", ...]
+getClassFunctionNames(AA, {excludeInstanceOf: "number"})   // ["qq", "ww", "concat", "copyWithin", "fill", ...]
 ```
 
 > Note: that the constructor is always omitted
@@ -47,8 +47,8 @@ getClassFunctionNames(AA, Object, {excludeInstanceOf: "number"})   // ["qq", "ww
 If you want to white / blacklist additional names do:
 
 ```ts
-getClassFunctionNames(AA, Object, {excludeInstanceOf: "number"})   // ["qq", "ww", "concat", "copyWithin", "fill", ...]s
-getClassFunctionNames(AA, Object, {includeInstanceOf: Function})   // ["qq", "ww", "concat", "copyWithin", "fill", ...]s
+getClassFunctionNames(AA, {excludeInstanceOf: "number"})   // ["qq", "ww", "concat", "copyWithin", "fill", ...]s
+getClassFunctionNames(AA, {includeInstanceOf: Function})   // ["qq", "ww", "concat", "copyWithin", "fill", ...]s
 ```
 
 > Note: that length is missing in the above example
