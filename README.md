@@ -11,10 +11,10 @@ Get all function names of a class up to a specified prototype.
 
 ## Usage
 
-Given the class `AAA`:
+Given the class `AA` extending Array:
 
 ```ts
-class AAA extends Array {
+class AA extends Array {
   qq() {
 
   }
