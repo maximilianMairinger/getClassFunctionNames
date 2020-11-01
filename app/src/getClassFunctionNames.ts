@@ -81,8 +81,16 @@ function prepFilter(filter: Filter) {
 }
 
 
-export function getClassFunctionNames(Class: any, UpToBaseClass: any = Object, filter: Filter = {}) {
-  const { allowName, mustBe } = prepFilter(filter)
+type Instantiable = {
+  new(...a: any[]): any
+}
+
+export function getClassFunctionNames(Class: Instantiable, UpToBaseClass?: Instantiable, filter?: Filter): string[]
+export function getClassFunctionNames(Class: Instantiable, filter: Filter): string[]
+export function getClassFunctionNames(Class: Instantiable, UpToBaseClass: Instantiable | Filter = Object, filter?: Filter) {
+  const { allowName, mustBe } = prepFilter(UpToBaseClass instanceof Function ? filter === undefined ? {} : filter : UpToBaseClass)
+    
+
 
   let functionNameList: string[] = []
   const isFree = name => !functionNameList.includes(name)
@@ -95,7 +103,7 @@ export function getClassFunctionNames(Class: any, UpToBaseClass: any = Object, f
     if (allowName(name) && isFree(name)) functionNameList.push(name)
   }
 
-  while (curProto instanceof UpToBaseClass) {
+  while (curProto instanceof (UpToBaseClass as any)) {
     Object.getOwnPropertyNames(curProto).forEach(add)
     cur = Object.getPrototypeOf(cur)
     curProto = cur.prototype
