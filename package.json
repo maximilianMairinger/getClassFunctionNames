@@ -1,6 +1,6 @@
 {
   "name": "get-class-function-names",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Get all function names of a class up to a specified prototype.",
   "main": "app/dist/getClassFunctionNames.js",
   "types": "app/dist/getClassFunctionNames.d.ts",
