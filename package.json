@@ -6,10 +6,10 @@
   "types": "app/dist/esm/getClassFunctionNames.d.ts",
   "exports": {
     "node": {
-      "import": "./app/dist/esm/timoi.js",
-      "require": "./app/dist/cjs/timoi.js"
+      "import": "./app/dist/esm/getClassFunctionNames.js",
+      "require": "./app/dist/cjs/getClassFunctionNames.js"
     },
-    "default": "./app/dist/esm/timoi.js"
+    "default": "./app/dist/esm/getClassFunctionNames.js"
   },
   "scripts": {
     "build": "rollup --config rollup.prod.config.js",
