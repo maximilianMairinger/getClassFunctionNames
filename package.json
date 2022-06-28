@@ -2,10 +2,17 @@
   "name": "get-class-function-names",
   "version": "1.1.2",
   "description": "Get all function names of a class up to a specified prototype.",
-  "main": "app/dist/getClassFunctionNames.js",
-  "types": "app/dist/getClassFunctionNames.d.ts",
+  "main": "app/dist/esm/getClassFunctionNames.js",
+  "types": "app/dist/esm/getClassFunctionNames.d.ts",
+  "exports": {
+    "node": {
+      "import": "./app/dist/esm/timoi.js",
+      "require": "./app/dist/cjs/timoi.js"
+    },
+    "default": "./app/dist/esm/timoi.js"
+  },
   "scripts": {
-    "build": "tsc -p ./tsconfig.prod.json",
+    "build": "rollup --config rollup.prod.config.js",
     "dev": "npm run devWeb",
     "devWeb": "rollup --config rollup.web.dev.config.js -w",
     "devNode": "rollup --config rollup.node.dev.config.js -w",

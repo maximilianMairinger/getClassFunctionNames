@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "outDir": "./app/dist",
     "module": "esnext",
     "target": "esnext",
     "moduleResolution": "node",
@@ -9,12 +8,5 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "skipLibCheck": true
-  },
-  "exclude": [
-    "./test",
-    "./app/dist"
-  ],
-  "include": [
-    "./app/src"
-  ]
+  }
 }
