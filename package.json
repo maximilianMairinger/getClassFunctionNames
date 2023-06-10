@@ -2,22 +2,25 @@
   "name": "get-class-function-names",
   "version": "1.1.4",
   "description": "Get all function names of a class up to a specified prototype.",
-  "main": "app/dist/esm/getClassFunctionNames.js",
+  "main": "app/dist/esm/getClassFunctionNames.mjs",
   "types": "app/dist/esm/getClassFunctionNames.d.ts",
   "exports": {
     "node": {
-      "import": "./app/dist/esm/getClassFunctionNames.js",
+      "import": "./app/dist/esm/getClassFunctionNames.mjs",
       "require": "./app/dist/cjs/getClassFunctionNames.js"
     },
-    "default": "./app/dist/esm/getClassFunctionNames.js"
+    "default": "./app/dist/esm/getClassFunctionNames.mjs"
   },
   "scripts": {
-    "build": "rollup --config rollup.prod.config.js",
+    "build": "del-cli app/dist && concurrently \"npm run buildESM\" \"npm run buildCJS\" --raw",
+    "buildESM": "tsc -p ./tsconfig.prod.esm.json && mjsify app/dist esm cjs",
+    "buildCJS": "tsc -p ./tsconfig.prod.cjs.json && npm run buildCJS2",
+    "buildCJS2": "rollup --config rollup.node.prod.config.mjs",
     "dev": "npm run devWeb",
-    "devWeb": "rollup --config rollup.web.dev.config.js -w",
-    "devNode": "rollup --config rollup.node.dev.config.js -w",
+    "devWeb": "rollup --config rollup.web.dev.config.mjs -w",
+    "devNode": "rollup --config rollup.node.dev.config.mjs -w",
     "deploy": "npm run build && npm publish",
-    "test": "node ./repl/dist/getClassFunctionNames-repl.js"
+    "test": "node ./repl/dist/getClassFunctionNames-repl.mjs"
   },
   "repository": {
     "type": "git",
@@ -36,12 +39,16 @@
   },
   "homepage": "https://github.com/maximilianMairinger/getClassFunctionNames#readme",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^13.0.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^8.1.0",
-    "@rollup/plugin-typescript": "^5.0.0",
+    "@rollup/plugin-commonjs": "^25.0.1",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-typescript": "^11.1.1",
     "@types/node": "^13.13.4",
-    "rollup": "^2.18.1",
+    "builtins": "^5.0.1",
+    "concurrently": "^8.2.0",
+    "del-cli": "^5.0.0",
+    "mjsify": "^2.0.8",
+    "rollup": "^3.24.1",
     "tslib": "2.0.0",
     "typescript": "^4.0.2",
     "webpack-merge": "^5.0.9"

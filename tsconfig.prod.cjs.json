@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "./app/dist/cjs",
+    "module": "CommonJS",
+    "target": "es2018",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "declaration": false,
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "./test",
+    "./app/dist",
+    "./repl"
+  ]
+}
