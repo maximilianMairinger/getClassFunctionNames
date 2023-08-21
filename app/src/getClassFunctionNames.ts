@@ -15,6 +15,14 @@ type FunctionNameInclude = {
   includeFunctionName?: string[]
 }
 
+type FunctionSymExclude = {
+  excludeFunctionName?: symbol[]
+}
+
+type FunctionSymInclude = {
+  includeFunctionName?: symbol[]
+}
+
 type InstanceOfExclude = {
   excludeInstanceOf?: (TypeOfString | InstanceOf)[]
 }
@@ -23,23 +31,33 @@ type InstanceOfInclude = {
   includeInstanceOf?: (TypeOfString | InstanceOf)[]
 }
 
-type Filter = 
+type NameFilter = 
 (FunctionNameInclude & InstanceOfExclude) |
 (FunctionNameInclude & InstanceOfInclude) | 
 (FunctionNameExclude & InstanceOfExclude) | 
 (FunctionNameExclude & InstanceOfInclude)
 
+type SymbolFiler = 
+(FunctionSymInclude & InstanceOfExclude) |
+(FunctionSymInclude & InstanceOfInclude) |
+(FunctionSymExclude & InstanceOfExclude) |
+(FunctionSymExclude & InstanceOfInclude)
 
-function prepFilter(filter: Filter) {
-  let allowName: (name: string) => boolean
-  if ((filter as FunctionNameInclude).includeFunctionName) {
-    const ar = (filter as FunctionNameInclude).includeFunctionName
-    allowName = (name: string) => ar.includes(name)
+
+
+function prepFilter<Name extends string | symbol, Filter extends Name extends string ? NameFilter : SymbolFiler>(filter: Filter) {
+  let allowName: (name: Name) => boolean
+  if ((filter as Name extends string ? FunctionNameInclude : FunctionSymInclude).includeFunctionName) {
+    const ar = (filter as Name extends string ? FunctionNameInclude : FunctionSymInclude).includeFunctionName as any[]
+    allowName = (name: Name) => ar.includes(name)
   }
   else {
-    const ar = (filter as FunctionNameExclude).excludeFunctionName || []
-    if (!ar.includes(constructorString)) ar.push(constructorString)
-    allowName = (name: string) => !ar.includes(name)
+    if ((filter as Name extends string ? FunctionNameExclude : FunctionSymExclude).excludeFunctionName === undefined) allowName = () => true 
+    else {
+      const ar = (filter as Name extends string ? FunctionNameExclude : FunctionSymExclude).excludeFunctionName as any[]
+      if (!ar.includes(constructorString)) ar.push(constructorString)
+      allowName = (name: Name) => !ar.includes(name)
+    }
   }
   
   let bes: any[]
@@ -85,31 +103,40 @@ type Instantiable = {
   new(...a: any[]): any
 }
 
-export function getClassFunctionNames(Class: Instantiable, UpToBaseClass?: Instantiable, filter?: Filter): string[]
-export function getClassFunctionNames(Class: Instantiable, filter: Filter): string[]
-export function getClassFunctionNames(Class: Instantiable, UpToBaseClass: Instantiable | Filter = Object, filter?: Filter) {
-  const { allowName, mustBe } = prepFilter(UpToBaseClass instanceof Function ? filter === undefined ? {} : filter : UpToBaseClass)
+
+function constrGetFunctionIds<Filter extends Ret extends string ? NameFilter : SymbolFiler, Ret extends symbol | string>(getFuncIds: (o: any) => Ret[]) {
+  function getClassFunctionIds(Class: Instantiable, UpToBaseClass?: Instantiable, filter?: Filter): Ret[]
+  function getClassFunctionIds(Class: Instantiable, filter: Filter): Ret[]
+  function getClassFunctionIds(Class: Instantiable, UpToBaseClass: Instantiable | Filter = Object, filter?: Filter) {
+    const { allowName, mustBe } = prepFilter<Ret, Partial<Filter>>(UpToBaseClass instanceof Function ? filter === undefined ? {} : filter : UpToBaseClass)
+      
+
+
+    let functionNameList: Ret[] = []
+    const isFree = name => !functionNameList.includes(name)
+    let cur = Class
+    let curProto = Class.prototype
     
+    const add = mustBe ? (name: Ret) => {
+      if (allowName(name) && mustBe(curProto[name]) && isFree(name)) functionNameList.push(name)
+    } : (name: Ret) => {
+      if (allowName(name) && isFree(name)) functionNameList.push(name)
+    }
 
+    while (curProto instanceof (UpToBaseClass as any)) {
+      getFuncIds(curProto).forEach(add)
+      cur = Object.getPrototypeOf(cur)
+      curProto = cur.prototype
+    }
 
-  let functionNameList: string[] = []
-  const isFree = name => !functionNameList.includes(name)
-  let cur = Class
-  let curProto = Class.prototype
-  
-  const add = mustBe ? (name: string) => {
-    if (allowName(name) && mustBe(curProto[name]) && isFree(name)) functionNameList.push(name)
-  } : (name: string) => {
-    if (allowName(name) && isFree(name)) functionNameList.push(name)
+    return functionNameList
   }
 
-  while (curProto instanceof (UpToBaseClass as any)) {
-    Object.getOwnPropertyNames(curProto).forEach(add)
-    cur = Object.getPrototypeOf(cur)
-    curProto = cur.prototype
-  }
-
-  return functionNameList
+  return getClassFunctionIds
 }
+
+export const getClassFunctionNames = constrGetFunctionIds<NameFilter, string>(Object.getOwnPropertyNames)
+export const getClassFunctionSymbols = constrGetFunctionIds<SymbolFiler, symbol>(Object.getOwnPropertySymbols)
+
 
 export default getClassFunctionNames
